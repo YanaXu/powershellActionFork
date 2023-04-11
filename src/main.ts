@@ -13,6 +13,7 @@ let userAgentPrefix = !!process.env.AZURE_HTTP_USER_AGENT ? `${process.env.AZURE
 
 async function main() {
     try {
+        console.log("process.env: ${process.env}");
         // Set user agent variable
         let usrAgentRepo = crypto.createHash('sha256').update(`${process.env.GITHUB_REPOSITORY}`).digest('hex');
         let actionName = 'AzurePowerShellAction';
