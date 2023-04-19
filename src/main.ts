@@ -13,8 +13,8 @@ let userAgentPrefix = !!process.env.AZURE_HTTP_USER_AGENT ? `${process.env.AZURE
 
 async function main() {
     try {
-        console.log("GITHUB_REPOSITORY: ${process.env.GITHUB_REPOSITORY}");
-        console.log("GITHUB_REPOSITORY: ${process.env.keys}");
+        console.log(`GITHUB_REPOSITORY: ${process.env.GITHUB_REPOSITORY}`);
+        console.log(`GITHUB_REPOSITORY: ${process.env.keys}`);
         console.log("-------------------------------------------1");
         // Set user agent variable
         let usrAgentRepo = crypto.createHash('sha256').update(`${process.env.GITHUB_REPOSITORY}`).digest('hex');
@@ -24,7 +24,7 @@ async function main() {
 
         const inlineScript: string = core.getInput('inlineScript', { required: true });
         azPSVersion = core.getInput('azPSVersion', { required: true }).trim().toLowerCase();
-        console.log("azPSVersion: ${azPSVersion}");
+        console.log(`azPSVersion: ${azPSVersion}`);
         const errorActionPreference: string = core.getInput('errorActionPreference');
         const failOnStandardError = core.getInput('failOnStandardError').trim().toLowerCase() === "true";
         const githubToken = core.getInput('githubToken');

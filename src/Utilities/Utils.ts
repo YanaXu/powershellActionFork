@@ -29,7 +29,7 @@ export default class Utils {
                 throw new Error(`Unknown os: ${runner.toLowerCase()}`);
         }
         process.env.PSModulePath = `${modulePath}${process.env.PSModulePath}`;
-        console.log("process.env.PSModulePath: ${process.env.PSModulePath}");
+        console.log(`process.env.PSModulePath: ${process.env.PSModulePath}`);
     }
 
     static async getLatestModule(moduleName: string): Promise<string> {
