@@ -6,12 +6,12 @@ import ScriptBuilder from './Utilities/ScriptBuilder';
 
 export default class ScriptRunner {
     static filePath: string;
-    inlineScript: string;
+    inputFile: string;
     errorActionPreference: string;
     failOnStandardErr: boolean;
 
-    constructor(inlineScript: string, errorActionPreference: string, failOnStandardErr:boolean) {
-        this.inlineScript = inlineScript;
+    constructor(inputFile: string, errorActionPreference: string, failOnStandardErr:boolean) {
+        this.inputFile = inputFile;
         this.errorActionPreference = errorActionPreference;
         this.failOnStandardErr = failOnStandardErr;
     }
@@ -34,9 +34,10 @@ export default class ScriptRunner {
                 }
             }
         };
-        const scriptToExecute: string = new ScriptBuilder().getInlineScriptFile(
-            this.inlineScript, this.errorActionPreference);
-        ScriptRunner.filePath = await FileUtils.createScriptFile(scriptToExecute);
+        // const scriptToExecute: string = new ScriptBuilder().getInlineScriptFile(
+        //     this.inlineScript, this.errorActionPreference);
+        // ScriptRunner.filePath = await FileUtils.createScriptFile(scriptToExecute);
+        ScriptRunner.filePath = this.inputFile;
         core.debug(`script file to run: ${ScriptRunner.filePath}`);
         await PowerShellToolRunner.init();
         const exitCode: number = await PowerShellToolRunner.executePowerShellScriptBlock(ScriptRunner.filePath, options);

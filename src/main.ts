@@ -19,13 +19,14 @@ async function main() {
         let userAgentString = (!!userAgentPrefix ? `${userAgentPrefix}+` : '') + `GITHUBACTIONS_${actionName}_${usrAgentRepo}`;
         core.exportVariable('AZURE_HTTP_USER_AGENT', userAgentString);
 
-        const inlineScript: string = core.getInput('inlineScript', { required: true });
+        // const inlineScript: string = core.getInput('inlineScript', { required: true });
+        const inputFile: string = core.getInput('inputFile', { required: true });
         azPSVersion = core.getInput('azPSVersion', { required: true }).trim().toLowerCase();
         const errorActionPreference: string = core.getInput('errorActionPreference');
         const failOnStandardError = core.getInput('failOnStandardError').trim().toLowerCase() === "true";
         const githubToken = core.getInput('githubToken');
         console.log(`Validating inputs`);
-        validateInputs(inlineScript, errorActionPreference);
+        // validateInputs(inlineScript, errorActionPreference);
 
         const githubAuth = !githubToken || Utils.isGhes() ? undefined : `token ${githubToken}`;
         const installResult = await new AzModuleInstaller(azPSVersion, githubAuth).install();
@@ -36,7 +37,7 @@ async function main() {
         console.log(`Initializing Az Module Complete`);
 
         console.log(`Running Az PowerShell Script`);
-        const scriptRunner: ScriptRunner = new ScriptRunner(inlineScript, errorActionPreference, failOnStandardError);
+        const scriptRunner: ScriptRunner = new ScriptRunner(inputFile, errorActionPreference, failOnStandardError);
         await scriptRunner.executeFile();
         console.log(`Script execution Complete`);
     } catch(error) {
