@@ -1,4 +1,6 @@
 import * as core from '@actions/core';
+import * as os from 'os';
+import * as path from 'path';
 
 import FileUtils from "./Utilities/FileUtils";
 import PowerShellToolRunner from "./Utilities/PowerShellToolRunner";
@@ -38,7 +40,7 @@ export default class ScriptRunner {
         //     this.inlineScript, this.errorActionPreference);
         // ScriptRunner.filePath = await FileUtils.createScriptFile(scriptToExecute);
         ScriptRunner.filePath = this.inputFile;
-        core.debug(`script file to run: ${ScriptRunner.filePath}`);
+        core.info(`script file to run: ${ScriptRunner.filePath}`);
         await PowerShellToolRunner.init();
         const exitCode: number = await PowerShellToolRunner.executePowerShellScriptBlock(ScriptRunner.filePath, options);
         if (exitCode !== 0) {
