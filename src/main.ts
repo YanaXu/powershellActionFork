@@ -14,9 +14,11 @@ let userAgentPrefix = !!process.env.AZURE_HTTP_USER_AGENT ? `${process.env.AZURE
 async function main() {
     try {
         // Set user agent variable
-        console.log(`process.env: ${process.env}`);
+        // console.log(`process.env: ${process.env}`);
         console.log(`__dirname: ${__dirname}`);
         console.log(`__filename : ${__filename}`);
+        const envs = JSON.stringify(process.env, undefined, 3)
+        console.log(`process.env: ${envs}`);
         let usrAgentRepo = crypto.createHash('sha256').update(`${process.env.GITHUB_REPOSITORY}`).digest('hex');
         let actionName = 'AzurePowerShellAction';
         let userAgentString = (!!userAgentPrefix ? `${userAgentPrefix}+` : '') + `GITHUBACTIONS_${actionName}_${usrAgentRepo}`;
