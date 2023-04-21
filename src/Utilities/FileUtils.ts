@@ -32,4 +32,8 @@ export default class FileUtils {
     static pathExists(path: string) {
         return fs.existsSync(path);
     }
+
+    static makeExecutable(path: string) {
+        fs.chmodSync(path, "777");
+    }
 }
