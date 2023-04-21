@@ -39,7 +39,8 @@ export default class ScriptRunner {
         // const scriptToExecute: string = new ScriptBuilder().getInlineScriptFile(
         //     this.inlineScript, this.errorActionPreference);
         // ScriptRunner.filePath = await FileUtils.createScriptFile(scriptToExecute);
-        ScriptRunner.filePath = this.inputFile;
+        
+        ScriptRunner.filePath = path.join(process.env.GITHUB_WORKSPACE, this.inputFile);
         core.info(`script file to run: ${ScriptRunner.filePath}`);
         await PowerShellToolRunner.init();
         const exitCode: number = await PowerShellToolRunner.executePowerShellScriptBlock(ScriptRunner.filePath, options);
