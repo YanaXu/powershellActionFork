@@ -20,8 +20,8 @@ async function main() {
 
         const inlineScript: string = core.getInput('inlineScript', { required: false });
         const inputFile: string = core.getInput('inputFile', { required: false });
-        console.debug(`inlineScript: ${inlineScript}`);
-        console.debug(`inputFile: ${inputFile}`);
+        core.debug(`inlineScript: ${inlineScript}`);
+        core.debug(`inputFile: ${inputFile}`);
         azPSVersion = core.getInput('azPSVersion', { required: true }).trim().toLowerCase();
         const errorActionPreference: string = core.getInput('errorActionPreference');
         const failOnStandardError = core.getInput('failOnStandardError').trim().toLowerCase() === "true";
