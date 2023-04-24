@@ -1,0 +1,78 @@
+on: [push]
+
+name: Test normal case -> all steps should succeed.
+
+jobs:
+  build_test_job:
+    name: 'Test normal case -> success Job'
+    runs-on: ${{ matrix.os }}
+    strategy:
+        matrix:
+          #os: [windows-latest, ubuntu-latest, macos-latest]
+          os: [windows-latest, ubuntu-latest]
+          psVersion: [latest, 9.6.0, 9.5.0]
+
+    steps:
+
+    - name: 'Checking out repo code'
+      uses: actions/checkout@v3
+
+    - name: 'Validate build'
+      run: |
+        npm install
+        npm run build
+        
+    - name: 'Run L0 tests'
+      run: |
+        npm run test
+
+    - name: Login Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}}
+        enable-AzPSSession: true 
+
+    - name: Test inlineScript normal case -> success
+      uses: ./
+      with:
+        azPSVersion: ${{ matrix.psVersion }}
+        inlineScript: |
+          Write-Host "-------------------this is from a inline script."
+          $PSVersionTable
+          Get-Module
+          Get-Module -ListAvailable Az
+          Get-AzVM
+          Get-AzResourceGroup -Name *yan*
+
+    - name: Test inputFile normal case -> success
+      uses: ./
+      with:
+        azPSVersion: ${{ matrix.psVersion }}
+        inputFile: ./ps/run_az.ps1
+
+    - name: Test inlineScript & inputFile -> execute inlineScript success
+      uses: ./
+      with:
+        azPSVersion: ${{ matrix.psVersion }}
+        inputFile: ./ps/run_az.ps1
+        inlineScript: |
+          Write-Host "-------------------this is from a inline script."
+          $PSVersionTable
+          Get-Module
+          Get-Module -ListAvailable Az
+          Get-AzVM
+          Get-AzResourceGroup -Name *yan*
+
+    - name: Test inlineScript errorActionPreference=continue ->  success
+      uses: ./
+      with:
+        azPSVersion: ${{ matrix.psVersion }}
+        errorActionPreference: continue
+        inlineScript: Write-Error -Message  'Test Error script' ; Write-Host 'Hello World From script'
+
+    - name: Test inputFile errorActionPreference=continue ->  success
+      uses: ./
+      with:
+        azPSVersion: ${{ matrix.psVersion }}
+        errorActionPreference: continue
+        inputFile: ./ps/test_errorActionPreference.ps1

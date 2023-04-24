@@ -1,0 +1,58 @@
+on: [push]
+
+name: Test negative cases -- all steps with Azure PowerShell Action should be failed 
+
+jobs:
+  build_test_job:
+    name: 'Test negative cases -- all steps with Azure PowerShell Action should be failed Job'
+    runs-on: ${{ matrix.os }}
+    continue-on-error: true # will continue next job
+    strategy:
+        matrix:
+          #os: [windows-latest, ubuntu-latest, macos-latest]
+          os: [windows-latest, ubuntu-latest]
+          psVersion: [latest, 9.6.0, 9.5.0]
+
+    steps:
+
+    - name: 'Checking out repo code'
+      uses: actions/checkout@v3
+
+    - name: 'Validate build'
+      run: |
+        npm install
+        npm run build
+        
+    - name: 'Run Unit tests'
+      run: |
+        npm run test
+
+    - name: Login Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}}
+        enable-AzPSSession: true 
+
+    - name: Test inlineScript & inputFile both empty -> failed with error
+      if: ${{ success() || failure() }}
+      uses: ./
+      with:
+        azPSVersion: ${{ matrix.psVersion }}
+        inputFile: 
+        inlineScript:  
+
+    - name: Test errorActionPreference=stop with inlineScript->  fail
+      if: ${{ success() || failure() }}
+      uses: ./
+      with:
+        azPSVersion: ${{ matrix.psVersion }}
+        errorActionPreference: stop
+        inlineScript: Write-Error -Message  'Test Error script' ; Write-Host 'Hello World From script'
+
+    - name: Test errorActionPreference=stop with inputFile->  fail
+      if: ${{ success() || failure() }}
+      uses: ./
+      with:
+        azPSVersion: ${{ matrix.psVersion }}
+        errorActionPreference: stop
+        inputFile: ./ps/test_errorActionPreference.ps1
