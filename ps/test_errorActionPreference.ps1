@@ -1,0 +1,1 @@
+Write-Error -Message  'Test Error File' ; Write-Host 'Hello World From File'
