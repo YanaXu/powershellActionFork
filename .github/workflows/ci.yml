@@ -18,8 +18,9 @@ jobs:
     - name: 'Checking out repo code'
       uses: actions/checkout@v2
 
-    - name: 'Validate build'
+    - name: 'Validate build !'
       run: |
+        echo "hello world!"
         npm install
         npm run build
         
